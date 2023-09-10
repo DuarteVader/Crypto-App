@@ -1,19 +1,32 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import { NativeBaseProvider } from "native-base";
+import { StyleSheet, View } from "react-native";
+import { config, GluestackUIProvider, LinearGradient, Text } from "@gluestack-ui/themed"
 import { NavigationContainer } from "@react-navigation/native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import AuthProvider from "./src/contexts/AuthContext";
+import Routes from "./src/Routes";
+import * as SplashScreen from 'expo-splash-screen';
+import useLoadFonts from "./src/hooks/useLoadFonts";
+
+SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-  return (
-    <NativeBaseProvider>
-      <StatusBar style="light" backgroundColor="#008069" translucent />
-      <NavigationContainer>
-        <SafeAreaProvider>
+  const { fontsLoaded } = useLoadFonts();
 
-        </SafeAreaProvider>
+  if(!fontsLoaded)
+    return null;
+
+  return (
+    <GluestackUIProvider config={config.theme}>
+      <StatusBar style="light" translucent />
+      <NavigationContainer>
+        <AuthProvider>
+          <SafeAreaProvider>
+            <Routes />
+          </SafeAreaProvider>
+        </AuthProvider>
       </NavigationContainer>     
-    </NativeBaseProvider>
+    </GluestackUIProvider>
   );
 }
 
